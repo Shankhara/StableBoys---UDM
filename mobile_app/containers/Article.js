@@ -1,17 +1,38 @@
-import React, { useState } from 'react'
-import { ActivityIndicator, Button, Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { ActivityIndicator, Button, Dimensions, Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { FAKE_DATA } from '../fakeData'
-import { HEIGHT, WIDTH, YELLOW } from '../App'
+import axios from 'axios'
+import { HEIGHT, SERVER_URL, WIDTH, YELLOW } from '../constants'
 
 export function Article({ route }) {
   const { id } = route.params
   const article = FAKE_DATA[id - 1]
   const [modalVisible, setModalVisible] = useState(false)
 
+  const purchaseAmountRequest = async () => {
+    const response = await fetch(`${SERVER_URL}/user/purchase_amount`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json', 'Content-Type': 'application/json',
+      }
+    })
+    if (response.status === 200) {
+      const json = await response.json()
+      console.log('JSON', json)
+    }
+  }
+
+  useEffect(() => {
+    let id
+    if (modalVisible === true) {
+      id = setTimeout(() => setModalVisible(false), 2500)
+    }
+    return () => clearTimeout(id)
+  }, [modalVisible])
+
   const handleBuy = () => {
     setModalVisible(true)
-    setTimeout(() => setModalVisible(false), 3000)
-
+    purchaseAmountRequest()
   }
 
   return (
@@ -61,7 +82,6 @@ const css = StyleSheet.create({
     margin: '10%',
   },
   text_name: {
-    marginTop: '-8%',
     fontWeight: 'bold',
     fontSize: 30,
   },

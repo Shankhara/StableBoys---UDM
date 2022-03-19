@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import axios from 'axios'
 import { useNavigation } from '@react-navigation/native'
-import { API_KEY } from '../App'
 
 export function InteractContract() {
   const nav = useNavigation()

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View } from 'react-native'
 import axios from 'axios'
-import { API_KEY, SB_WALLET, SERVER_URL } from '../App'
 import { useNavigation } from '@react-navigation/native'
+import { API_KEY, SB_WALLET, SERVER_URL } from '../constants'
 
 export function DeployContract() {
   const nav = useNavigation()
