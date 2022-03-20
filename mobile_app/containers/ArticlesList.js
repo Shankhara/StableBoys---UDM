@@ -47,12 +47,18 @@ const css = StyleSheet.create({
     width: '100%'
   },
   text_name: {
+    fontWeight: 'bold',
+    fontSize: 25,
     margin: '2%'
   },
   text_desc: {
+    fontSize: 14,
     margin: '2%'
   },
   text_price: {
+    fontWeight: 'bold',
+    textAlign: 'right',
+    fontSize: 22,
     margin: '2%'
   },
   text_view: {
