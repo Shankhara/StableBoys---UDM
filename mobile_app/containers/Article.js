@@ -1,38 +1,56 @@
 import React, { useEffect, useState } from 'react'
-import { ActivityIndicator, Button, Dimensions, Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Button, Image, Modal, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { FAKE_DATA } from '../fakeData'
-import axios from 'axios'
 import { HEIGHT, SERVER_URL, WIDTH, YELLOW } from '../constants'
 
 export function Article({ route }) {
   const { id } = route.params
   const article = FAKE_DATA[id - 1]
   const [modalVisible, setModalVisible] = useState(false)
+  const [claimModalVisible, setClaimModalVisible] = useState(false)
+  const [status, setStatus] = useState(false)
 
-  const checkPurchaseAmountRequest = async () => {
-    const response = await fetch(`${SERVER_URL}/user/purchase_amount`, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json', 'Content-Type': 'application/json',
-      }
+  const purchaseAmountRequest = async () => {
+    const response = await fetch(`${SERVER_URL}/user/purchase`, {
+      method: 'POST',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        price: article.price
+      })
     })
     if (response.status === 200) {
       const json = await response.json()
-      console.log('JSON', json)
+      if (json.status === true) {
+        setStatus(true)
+      }
     }
   }
 
   useEffect(() => {
-    let id
+    let id, idB
     if (modalVisible === true) {
-      id = setTimeout(() => setModalVisible(false), 2500)
+      id = setTimeout(() => { setModalVisible(false) }, 2500)
+      if (status) {
+        idB = setTimeout(() => setClaimModalVisible(true), 2500)
+      }
+    }
+    return () => {
+      clearTimeout(id)
+      clearTimeout(idB)
+    }
+  }, [modalVisible, status])
+
+  useEffect(() => {
+    let id
+    if (claimModalVisible === true) {
+      id = setTimeout(() => setClaimModalVisible(false), 2500)
     }
     return () => clearTimeout(id)
-  }, [modalVisible])
+  }, [claimModalVisible])
 
   const handleBuy = () => {
     setModalVisible(true)
-    checkPurchaseAmountRequest()
+    purchaseAmountRequest()
   }
 
   return (
@@ -56,11 +74,32 @@ export function Article({ route }) {
           </View>
         </View>
       </Modal>
+      <Modal animationType='slide' visible={claimModalVisible} transparent={true} onRequestClose={() => setClaimModalVisible(false)}>
+        <View style={css.claim_view}>
+          <Text style={css.claim_text}>NFT unlocked !</Text>
+        </View>
+      </Modal>
     </ScrollView>
   )
 }
 
 const css = StyleSheet.create({
+  claim_text: {
+    fontWeight: 'bold',
+    fontSize: 30,
+    textAlign: 'center'
+  },
+  claim_view: {
+    position: 'absolute',
+    justifyContent: 'center',
+    bottom: 20,
+    alignSelf: 'center',
+    height: 100,
+    width: WIDTH - 20,
+    padding: '5%',
+    backgroundColor: YELLOW,
+    borderRadius: 10,
+  },
   loading_view: {
     padding: '20%'
   },

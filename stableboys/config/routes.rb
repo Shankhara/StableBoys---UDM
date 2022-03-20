@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :user, only: [] do
     collection do
       get :purchase_amount
+      post :purchase
+      post :wallet_address
     end
   end
   resources :pro, only: [] do

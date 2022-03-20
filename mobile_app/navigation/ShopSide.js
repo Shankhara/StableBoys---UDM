@@ -10,7 +10,7 @@ export function ShopSide() {
   return (
     <Tab.Navigator>
       <Tab.Screen name="Shopping List" component={ShopStack} />
-      <Tab.Screen name="Profile" component={ProfileStack} />
+      <Tab.Screen name="Profile" component={ProfileStack} options={{ unmountOnBlur: true }} />
     </Tab.Navigator>
   )
 }
