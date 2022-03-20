@@ -9,7 +9,7 @@ export function Article({ route }) {
   const article = FAKE_DATA[id - 1]
   const [modalVisible, setModalVisible] = useState(false)
 
-  const purchaseAmountRequest = async () => {
+  const checkPurchaseAmountRequest = async () => {
     const response = await fetch(`${SERVER_URL}/user/purchase_amount`, {
       method: 'GET',
       headers: {
@@ -32,7 +32,7 @@ export function Article({ route }) {
 
   const handleBuy = () => {
     setModalVisible(true)
-    purchaseAmountRequest()
+    checkPurchaseAmountRequest()
   }
 
   return (

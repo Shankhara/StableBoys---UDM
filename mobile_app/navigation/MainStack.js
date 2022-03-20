@@ -1,20 +1,18 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { DeployContract } from '../containers/DeployContract'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { InteractContract } from '../containers/InteractContract'
-import { ArticlesList } from '../containers/ArticlesList'
-import { Article } from '../containers/Article'
+import { ProSide } from '../containers/DeployContract'
+import { Menu } from '../containers/Menu'
+import { ShopSide } from './ShopSide'
 
 const Stack = createNativeStackNavigator();
 
 export const MainStack = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="ArticlesList" component={ArticlesList} />
-      <Stack.Screen name="Article" component={Article} />
-      <Stack.Screen name="DeployContract" component={DeployContract} />
-      <Stack.Screen name="InteractContract" component={InteractContract} />
+    <Stack.Navigator>
+      <Stack.Screen name="Menu" component={Menu} options={{headerShown: false}}/>
+      <Stack.Screen name="ProSide" component={ProSide} />
+      <Stack.Screen name="ShopSide" component={ShopSide} />
     </Stack.Navigator>
   )
 }

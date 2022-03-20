@@ -3,7 +3,10 @@
 class UserController < ApplicationController
   def purchase_amount
     user = User.first
-    render json: { status: user.purchase_amount >= 100 }, status: :ok
+    contract = Contract.first
+    status = false
+    status = user.purchase_amount >= contract.goal if contract
+    render json: { status: status }, status: :ok
   end
 
   def purchase

@@ -2,7 +2,7 @@ require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
   # config.hosts << '192.168.1.16'
-  config.hosts << "dafd-2a01-cb00-c27-3f00-3fc-9101-f3e8-a31b.ngrok.io"
+  config.hosts << "2d3f-2a01-cb00-c27-3f00-5106-f5bd-fa98-d55b.ngrok.io"
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded any time

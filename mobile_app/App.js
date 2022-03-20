@@ -1,12 +1,12 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { BottomTab } from './navigation/BottomTab'
 import { NavigationContainer } from '@react-navigation/native'
+import { MainStack } from './navigation/MainStack'
 
 export default function App() {
   return (
     <NavigationContainer>
-      <BottomTab />
+      <MainStack />
     </NavigationContainer>
   );
 }

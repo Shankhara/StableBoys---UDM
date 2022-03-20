@@ -5,4 +5,9 @@ Rails.application.routes.draw do
       get :purchase_amount
     end
   end
+  resources :pro, only: [] do
+    collection do
+      post :create_contract
+    end
+  end
 end
