@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :pro, only: [] do
     collection do
       post :create_contract
+      get :contract
     end
   end
 end

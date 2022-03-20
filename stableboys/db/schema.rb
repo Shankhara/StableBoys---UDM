@@ -14,7 +14,10 @@ ActiveRecord::Schema.define(version: 2022_03_20_092111) do
 
   create_table "contracts", force: :cascade do |t|
     t.string "name"
+    t.string "address"
+    t.string "network"
     t.integer "goal"
+    t.string "cid"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

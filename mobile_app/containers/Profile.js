@@ -1,7 +1,8 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, StyleSheet, Text, TextInput, View } from 'react-native'
-import { SERVER_URL, YELLOW } from '../constants'
-import { setMultiValues, setValue } from '../utils'
+import { API_KEY, SB_WALLET, SERVER_URL, YELLOW } from '../constants'
+import { setValue } from '../utils'
+import axios from 'axios'
 
 export function Profile() {
   const [wallet, setWallet] = useState()
@@ -15,7 +16,7 @@ export function Profile() {
         wallet_address: wallet
       })
     })
-    console.log('saveWalletAddress', response.status)
+    // console.log('saveWalletAddress', response.status)
   }
 
   const purchaseAmountRequest = async () => {
@@ -25,7 +26,7 @@ export function Profile() {
     })
     if (response.status === 200) {
       const json = await response.json()
-      console.log('JSON', json)
+      // console.log('JSON', json)
       setValue('purchaseAmount', json.purchase_amount, setState)
       if (json.status === true) {
         setValue('status', json.status, setState)
@@ -33,10 +34,65 @@ export function Profile() {
     }
   }
 
+  const handleNFTCreate = () => {
+    const http = axios.create({
+      baseURL: "https://api.starton.io/v2",
+      headers: {
+        "x-api-key": API_KEY,
+      },
+    })
+    http.post('/pinning/content/json',
+      {
+        "name": "NFT Prize - PewDiePie",
+        "content": {
+          "name": "NFT Prize - PewDiePie",
+          "description": "Congrats !",
+          "image": "ipfs://ipfs/QmV9VGokeUi36zg2dEjcwvoRqzpZycuxAq9zQQKTEazcXF",
+          "attributes": [
+            {
+              "key": "credit",
+              "trait_type": "string",
+              "value": "Blockchain API lovingly delivered by https://www.starton.io"
+            }
+          ]
+        },
+        "meta": {},
+        "isSync": true
+      }).then(r => {
+        const nftCid = r.data.pinStatus.pin.cid
+        http.post(`/smart-contract/${state.ctr.network}/${state.ctr.address}/call`,
+          {
+            "functionName": 'safeMint',
+            "signerWallet": SB_WALLET,
+            "params": [
+              wallet,
+              nftCid
+            ]
+          }).then(r => {
+          console.log('NFTCreate r', r.data)
+        }).catch(err => {
+          console.log('NFTCreate', err)
+        })
+    })
+  }
+
+  const contractRequest = async () => {
+    const response = await fetch(`${SERVER_URL}/pro/contract`, {
+      method: 'GET',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' }
+    })
+    if (response.status === 200) {
+      const json = await response.json()
+      setValue('ctr', json.contract, setState)
+      console.log('contractRequest JSON', json)
+    }
+  }
+
   console.log('Profile renders', state)
 
   useEffect(() => {
     purchaseAmountRequest()
+    contractRequest()
   }, [])
 
   return (
@@ -58,14 +114,14 @@ export function Profile() {
         { !state?.status &&
         <>
           <Text style={css.text}>You need to reach the purchase amount goal to claim your NFT</Text>
-          <Text style={css.goal_text}>{state?.purchaseAmount}$</Text>
+          <Text style={css.goal_text}>{state?.purchaseAmount} / {state?.ctr?.goal}$</Text>
         </>
         }
         { state?.status &&
         <>
           <Text style={css.text}>You're NFT is unlocked !</Text>
           <View style={css.button_view}>
-            <Button title='Claim' onPress={handleSaveWalletAddress} />
+            <Button title='Claim' onPress={handleNFTCreate} />
           </View>
         </>
         }
